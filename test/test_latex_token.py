@@ -1,7 +1,7 @@
 import unittest
-from mistletoe.span_token import tokenize_inner
-from mistletoe.latex_token import Math
-from mistletoe.latex_renderer import LaTeXRenderer
+from mistletoe_notey.span_token import tokenize_inner
+from mistletoe_notey.latex_token import Math
+from mistletoe_notey.latex_renderer import LaTeXRenderer
 
 
 class TestLaTeXToken(unittest.TestCase):

@@ -1,5 +1,5 @@
 """
-Inline tokenizer for mistletoe.
+Inline tokenizer for mistletoe_notey.
 """
 
 

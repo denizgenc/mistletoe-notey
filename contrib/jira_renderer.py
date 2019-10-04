@@ -23,15 +23,15 @@
 
 import html
 from itertools import chain
-from mistletoe import block_token, span_token
-from mistletoe.base_renderer import BaseRenderer
+from mistletoe_notey import block_token, span_token
+from mistletoe_notey.base_renderer import BaseRenderer
 import sys
 
 class JIRARenderer(BaseRenderer):
     """
     JIRA renderer class.
 
-    See mistletoe.base_renderer module for more info.
+    See mistletoe_notey.base_renderer module for more info.
     """
     def __init__(self, *extras):
         """

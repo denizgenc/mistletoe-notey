@@ -1,5 +1,5 @@
 """
-Block-level tokenizer for mistletoe.
+Block-level tokenizer for mistletoe_notey.
 """
 
 

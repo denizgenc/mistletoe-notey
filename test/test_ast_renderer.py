@@ -1,5 +1,5 @@
 import unittest
-from mistletoe import Document, ast_renderer 
+from mistletoe_notey import Document, ast_renderer 
 
 class TestASTRenderer(unittest.TestCase):
     def test(self):

@@ -1,13 +1,13 @@
 import unittest
 from unittest.mock import patch, call
-from mistletoe import block_token, span_token
-from mistletoe.block_tokenizer import FileWrapper
+from mistletoe_notey import block_token, span_token
+from mistletoe_notey.block_tokenizer import FileWrapper
 
 
 class TestToken(unittest.TestCase):
     def setUp(self):
         self.addCleanup(lambda: span_token._token_types.__setitem__(-1, span_token.RawText))
-        patcher = patch('mistletoe.span_token.RawText')
+        patcher = patch('mistletoe_notey.span_token.RawText')
         self.mock = patcher.start()
         span_token._token_types[-1] = self.mock
         self.addCleanup(patcher.stop)
@@ -65,12 +65,12 @@ class TestSetextHeading(TestToken):
 
 class TestQuote(unittest.TestCase):
     def test_match(self):
-        with patch('mistletoe.block_token.Paragraph') as mock:
+        with patch('mistletoe_notey.block_token.Paragraph') as mock:
             token = next(iter(block_token.tokenize(['> line 1\n', '> line 2\n'])))
             self.assertIsInstance(token, block_token.Quote)
 
     def test_lazy_continuation(self):
-        with patch('mistletoe.block_token.Paragraph') as mock:
+        with patch('mistletoe_notey.block_token.Paragraph') as mock:
             token = next(iter(block_token.tokenize(['> line 1\n', 'line 2\n'])))
             self.assertIsInstance(token, block_token.Quote)
 
@@ -232,7 +232,7 @@ class TestTable(unittest.TestCase):
                  '| --- | --- | --- |\n',
                  '| cell 1 | cell 2 | cell 3 |\n',
                  '| more 1 | more 2 | more 3 |\n']
-        with patch('mistletoe.block_token.TableRow') as mock:
+        with patch('mistletoe_notey.block_token.TableRow') as mock:
             token = next(iter(block_token.tokenize(lines)))
             self.assertIsInstance(token, block_token.Table)
             self.assertTrue(hasattr(token, 'header'))
@@ -245,7 +245,7 @@ class TestTable(unittest.TestCase):
         lines = ['header 1 | header 2\n',
                  '    ---: | :---\n',
                  '  cell 1 | cell 2\n']
-        with patch('mistletoe.block_token.TableRow') as mock:
+        with patch('mistletoe_notey.block_token.TableRow') as mock:
             token, = block_token.tokenize(lines)
             self.assertIsInstance(token, block_token.Table)
             self.assertTrue(hasattr(token, 'header'))
@@ -263,7 +263,7 @@ class TestTable(unittest.TestCase):
 
 class TestTableRow(unittest.TestCase):
     def test_match(self):
-        with patch('mistletoe.block_token.TableCell') as mock:
+        with patch('mistletoe_notey.block_token.TableCell') as mock:
             line = '| cell 1 | cell 2 |\n'
             token = block_token.TableRow(line)
             self.assertEqual(token.row_align, [None])
@@ -271,7 +271,7 @@ class TestTableRow(unittest.TestCase):
             mock.assert_has_calls([call('cell 1', None), call('cell 2', None)])
 
     def test_easy_table_row(self):
-        with patch('mistletoe.block_token.TableCell') as mock:
+        with patch('mistletoe_notey.block_token.TableCell') as mock:
             line = 'cell 1 | cell 2\n'
             token = block_token.TableRow(line)
             self.assertEqual(token.row_align, [None])
@@ -279,7 +279,7 @@ class TestTableRow(unittest.TestCase):
             mock.assert_has_calls([call('cell 1', None), call('cell 2', None)])
 
     def test_short_row(self):
-        with patch('mistletoe.block_token.TableCell') as mock:
+        with patch('mistletoe_notey.block_token.TableCell') as mock:
             line = '| cell 1 |\n'
             token = block_token.TableRow(line, [None, None])
             self.assertEqual(token.row_align, [None, None])

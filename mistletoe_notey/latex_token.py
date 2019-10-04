@@ -1,5 +1,5 @@
 import re
-import mistletoe.span_token as span_token
+import mistletoe_notey.span_token as span_token
 
 
 __all__ = ['Math']

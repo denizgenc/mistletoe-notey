@@ -1,10 +1,10 @@
 """
-LaTeX renderer for mistletoe.
+LaTeX renderer for mistletoe_notey.
 """
 
 from itertools import chain
-import mistletoe.latex_token as latex_token
-from mistletoe.base_renderer import BaseRenderer
+import mistletoe_notey.latex_token as latex_token
+from mistletoe_notey.base_renderer import BaseRenderer
 
 class LaTeXRenderer(BaseRenderer):
     def __init__(self, *extras):

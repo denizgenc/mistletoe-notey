@@ -10,7 +10,7 @@ if [[ $OLD_VERSION == "" || $NEW_VERSION == "" ]]; then
     exit 1
 fi
 
-FILES="README.md mistletoe/__init__.py"
+FILES="README.md mistletoe_notey/__init__.py"
 
 for FILE in $FILES; do
     sed -e "s/$OLD_VERSION/$NEW_VERSION/g" "$FILE" > "$FILE.tmp"

@@ -3,8 +3,8 @@ Built-in span-level token classes.
 """
 
 import re
-import mistletoe.span_tokenizer as tokenizer
-from mistletoe import core_tokens
+import mistletoe_notey.span_tokenizer as tokenizer
+from mistletoe_notey import core_tokens
 
 
 """

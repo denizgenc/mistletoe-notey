@@ -1,15 +1,15 @@
 from setuptools import setup
-import mistletoe
+import mistletoe_notey
 
-setup(name='mistletoe',
-      version=mistletoe.__version__,
-      description='A fast, extensible Markdown parser in pure Python.',
-      url='https://github.com/miyuchina/mistletoe',
-      author='Mi Yu',
-      author_email='hello@afteryu.me',
+setup(name='mistletoe_notey',
+      version=mistletoe_notey.__version__,
+      description='A fast, extensible Notey Markdown parser in pure Python based on mistletoe_notey.',
+      url='https://github.com/denizgenc/mistletoe_notey',
+      author='Deniz Genc',
+      author_email='25902330+denizgenc@users.noreply.github.com',
       license='MIT',
-      packages=['mistletoe'],
-      entry_points={'console_scripts': ['mistletoe = mistletoe.__main__:main']},
+      packages=['mistletoe_notey'],
+      entry_points={'console_scripts': ['mistletoe_notey = mistletoe_notey.__main__:main']},
       classifiers=[
           'Development Status :: 3 - Alpha',
           'Intended Audience :: Developers',
@@ -24,6 +24,5 @@ setup(name='mistletoe',
           'Topic :: Software Development :: Libraries :: Python Modules',
           'Topic :: Text Processing :: Markup',
           ],
-      keywords='markdown lexer parser development',
       python_requires='~=3.3',
       zip_safe=False)

@@ -5,9 +5,9 @@ Built-in block-level token classes.
 import re
 import sys
 from itertools import zip_longest
-import mistletoe.block_tokenizer as tokenizer
-from mistletoe import span_token
-from mistletoe.core_tokens import (
+import mistletoe_notey.block_tokenizer as tokenizer
+from mistletoe_notey import span_token
+from mistletoe_notey.core_tokens import (
         is_link_label,
         follows,
         shift_whitespace,

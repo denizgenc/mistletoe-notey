@@ -1,14 +1,14 @@
 """
-Make mistletoe easier to import.
+Make mistletoe_notey easier to import.
 """
 
 __version__ = "0.7.2"
 __all__ = ['html_renderer', 'ast_renderer', 'block_token', 'block_tokenizer',
            'span_token', 'span_tokenizer']
 
-from mistletoe.block_token import Document
-from mistletoe.base_renderer import BaseRenderer
-from mistletoe.html_renderer import HTMLRenderer
+from mistletoe_notey.block_token import Document
+from mistletoe_notey.base_renderer import BaseRenderer
+from mistletoe_notey.html_renderer import HTMLRenderer
 
 def markdown(iterable, renderer=HTMLRenderer):
     """

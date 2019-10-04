@@ -1,10 +1,10 @@
 """
-GitHub Wiki support for mistletoe.
+GitHub Wiki support for mistletoe_notey.
 """
 
 import re
-from mistletoe.span_token import SpanToken
-from mistletoe.html_renderer import HTMLRenderer
+from mistletoe_notey.span_token import SpanToken
+from mistletoe_notey.html_renderer import HTMLRenderer
 
 
 __all__ = ['GithubWiki', 'GithubWikiRenderer']

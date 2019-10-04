@@ -1,5 +1,5 @@
 import unittest
-from mistletoe import Document
+from mistletoe_notey import Document
 from contrib.mathjax import MathJaxRenderer
 
 class TestMathJaxRenderer(unittest.TestCase):

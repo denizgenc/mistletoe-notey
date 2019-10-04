@@ -1,16 +1,16 @@
 """
-HTML renderer for mistletoe.
+HTML renderer for mistletoe_notey.
 """
 
 import re
 import sys
 from itertools import chain
 from urllib.parse import quote
-from mistletoe.block_token import HTMLBlock
-from mistletoe.span_token import HTMLSpan
-from mistletoe.base_renderer import BaseRenderer
+from mistletoe_notey.block_token import HTMLBlock
+from mistletoe_notey.span_token import HTMLSpan
+from mistletoe_notey.base_renderer import BaseRenderer
 if sys.version_info < (3, 4):
-    from mistletoe import _html as html
+    from mistletoe_notey import _html as html
 else:
     import html
 
@@ -19,7 +19,7 @@ class HTMLRenderer(BaseRenderer):
     """
     HTML renderer class.
 
-    See mistletoe.base_renderer module for more info.
+    See mistletoe_notey.base_renderer module for more info.
     """
     def __init__(self, *extras):
         """

@@ -1,6 +1,6 @@
 from unittest import TestCase
 from unittest.mock import patch
-from mistletoe.core_tokens import (MatchObj, Delimiter, follows, shift_whitespace,
+from mistletoe_notey.core_tokens import (MatchObj, Delimiter, follows, shift_whitespace,
         is_control_char, deactivate_delimiters, preceded_by, succeeded_by)
 
 

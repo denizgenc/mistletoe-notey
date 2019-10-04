@@ -1,9 +1,9 @@
 """
-Abstract syntax tree renderer for mistletoe.
+Abstract syntax tree renderer for mistletoe_notey.
 """
 
 import json
-from mistletoe.base_renderer import BaseRenderer
+from mistletoe_notey.base_renderer import BaseRenderer
 
 class ASTRenderer(BaseRenderer):
     def render(self, token):

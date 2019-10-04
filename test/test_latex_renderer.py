@@ -1,6 +1,6 @@
 from unittest import TestCase, mock
-import mistletoe.latex_token as latex_token
-from mistletoe.latex_renderer import LaTeXRenderer
+import mistletoe_notey.latex_token as latex_token
+from mistletoe_notey.latex_renderer import LaTeXRenderer
 
 
 class TestLaTeXRenderer(TestCase):
@@ -74,7 +74,7 @@ class TestLaTeXRenderer(TestCase):
         self._test_token('ListItem', '\\item inner\n')
 
     def test_table_with_header(self):
-        func_path = 'mistletoe.latex_renderer.LaTeXRenderer.render_table_row'
+        func_path = 'mistletoe_notey.latex_renderer.LaTeXRenderer.render_table_row'
         with mock.patch(func_path, autospec=True, return_value='row\n'):
             output = '\\begin{tabular}{l c r}\nrow\n\\hline\ninner\\end{tabular}\n'
             self._test_token('Table', output, column_align=[None, 0, 1])
@@ -111,7 +111,7 @@ class TestLaTeXFootnotes(TestCase):
         self.addCleanup(self.renderer.__exit__, None, None, None)
 
     def test_footnote_image(self):
-        from mistletoe import Document
+        from mistletoe_notey import Document
         raw = ['![alt][foo]\n', '\n', '[foo]: bar "title"\n']
         target = ('\\documentclass{article}\n'
                   '\\usepackage{graphicx}\n'
@@ -123,7 +123,7 @@ class TestLaTeXFootnotes(TestCase):
         self.assertEqual(self.renderer.render(Document(raw)), target)
 
     def test_footnote_link(self):
-        from mistletoe import Document
+        from mistletoe_notey import Document
         raw = ['[name][key]\n', '\n', '[key]: target\n']
         target = ('\\documentclass{article}\n'
                   '\\usepackage{hyperref}\n'

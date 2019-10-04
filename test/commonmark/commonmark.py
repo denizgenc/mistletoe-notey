@@ -1,7 +1,7 @@
 import re
 import sys
 import json
-from mistletoe import markdown
+from mistletoe_notey import markdown
 from traceback import print_tb
 from argparse import ArgumentParser
 

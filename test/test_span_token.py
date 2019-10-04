@@ -1,13 +1,13 @@
 import unittest
 from unittest.mock import patch
-from mistletoe import span_token
+from mistletoe_notey import span_token
 from functools import wraps
 
 
 class TestBranchToken(unittest.TestCase):
     def setUp(self):
         self.addCleanup(lambda: span_token._token_types.__setitem__(-1, span_token.RawText))
-        patcher = patch('mistletoe.span_token.RawText')
+        patcher = patch('mistletoe_notey.span_token.RawText')
         self.mock = patcher.start()
         span_token._token_types[-1] = self.mock
         self.addCleanup(patcher.stop)

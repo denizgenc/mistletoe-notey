@@ -3,7 +3,7 @@ PYTHON_EXEC=python3
 .PHONY: run test coverage integration benchmark docs
 
 run:
-	${PYTHON_EXEC} -m mistletoe
+	${PYTHON_EXEC} -m mistletoe_notey
 
 test:
 	${PYTHON_EXEC} -m unittest

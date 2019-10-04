@@ -21,7 +21,7 @@
 # SOFTWARE.
 
 from unittest import TestCase, mock
-from mistletoe.span_token import tokenize_inner
+from mistletoe_notey.span_token import tokenize_inner
 from contrib.jira_renderer import JIRARenderer
 import random
 import string

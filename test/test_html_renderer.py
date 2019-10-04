@@ -1,5 +1,5 @@
 from unittest import TestCase, mock
-from mistletoe.html_renderer import HTMLRenderer
+from mistletoe_notey.html_renderer import HTMLRenderer
 
 
 class TestRenderer(TestCase):
@@ -28,7 +28,7 @@ class TestHTMLRenderer(TestRenderer):
         self._test_token('Emphasis', '<em>inner</em>')
 
     def test_inline_code(self):
-        from mistletoe.span_token import tokenize_inner
+        from mistletoe_notey.span_token import tokenize_inner
         rendered = self.renderer.render(tokenize_inner('`foo`')[0])
         self.assertEqual(rendered, '<code>foo</code>')
 
@@ -70,13 +70,13 @@ class TestHTMLRenderer(TestRenderer):
         self._test_token('Paragraph', '<p>inner</p>')
 
     def test_block_code(self):
-        from mistletoe.block_token import tokenize
+        from mistletoe_notey.block_token import tokenize
         rendered = self.renderer.render(tokenize(['```sh\n', 'foo\n', '```\n'])[0])
         output = '<pre><code class="language-sh">foo\n</code></pre>'
         self.assertEqual(rendered, output)
 
     def test_block_code_no_language(self):
-        from mistletoe.block_token import tokenize
+        from mistletoe_notey.block_token import tokenize
         rendered = self.renderer.render(tokenize(['```\n', 'foo\n', '```\n'])[0])
         output = '<pre><code>foo\n</code></pre>'
         self.assertEqual(rendered, output)
@@ -90,7 +90,7 @@ class TestHTMLRenderer(TestRenderer):
         self._test_token('ListItem', output)
 
     def test_table_with_header(self):
-        func_path = 'mistletoe.html_renderer.HTMLRenderer.render_table_row'
+        func_path = 'mistletoe_notey.html_renderer.HTMLRenderer.render_table_row'
         with mock.patch(func_path, autospec=True) as mock_func:
             mock_func.return_value = 'row'
             output = ('<table>\n'
@@ -100,7 +100,7 @@ class TestHTMLRenderer(TestRenderer):
             self._test_token('Table', output)
 
     def test_table_without_header(self):
-        func_path = 'mistletoe.html_renderer.HTMLRenderer.render_table_row'
+        func_path = 'mistletoe_notey.html_renderer.HTMLRenderer.render_table_row'
         with mock.patch(func_path, autospec=True) as mock_func:
             mock_func.return_value = 'row'
             output = '<table>\n<tbody>\ninner</tbody>\n</table>'
@@ -143,13 +143,13 @@ class TestHTMLRendererFootnotes(TestCase):
         self.addCleanup(self.renderer.__exit__, None, None, None)
 
     def test_footnote_image(self):
-        from mistletoe import Document
+        from mistletoe_notey import Document
         token = Document(['![alt][foo]\n', '\n', '[foo]: bar "title"\n'])
         output = '<p><img src="bar" alt="alt" title="title" /></p>\n'
         self.assertEqual(self.renderer.render(token), output)
 
     def test_footnote_link(self):
-        from mistletoe import Document
+        from mistletoe_notey import Document
         token = Document(['[name][foo]\n', '\n', '[foo]: target\n'])
         output = '<p><a href="target">name</a></p>\n' 
         self.assertEqual(self.renderer.render(token), output)

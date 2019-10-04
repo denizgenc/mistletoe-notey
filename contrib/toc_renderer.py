@@ -1,11 +1,11 @@
 """
-Table of contents support for mistletoe.
+Table of contents support for mistletoe_notey.
 
 See `if __name__ == '__main__'` section for sample usage.
 """
 
 import re
-from mistletoe.html_renderer import HTMLRenderer
+from mistletoe_notey.html_renderer import HTMLRenderer
 
 
 class TOCRenderer(HTMLRenderer):
@@ -31,7 +31,7 @@ class TOCRenderer(HTMLRenderer):
         """
         Returns table of contents as a block_token.List instance.
         """
-        from mistletoe.block_token import List
+        from mistletoe_notey.block_token import List
         def get_indent(level):
             if self.omit_title:
                 level -= 1

@@ -1,4 +1,4 @@
-from mistletoe import HTMLRenderer
+from mistletoe_notey import HTMLRenderer
 from pygments import highlight
 from pygments.styles import get_style_by_name as get_style
 from pygments.lexers import get_lexer_by_name as get_lexer, guess_lexer

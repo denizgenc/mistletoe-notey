@@ -4,7 +4,7 @@ Base class for renderers.
 
 import re
 import sys
-from mistletoe import block_token, span_token
+from mistletoe_notey import block_token, span_token
 
 class BaseRenderer(object):
     """
@@ -23,12 +23,12 @@ class BaseRenderer(object):
         Suppose SomeRenderer inherits BaseRenderer, and fin is the input file.
         The syntax looks something like this:
 
-            >>> from mistletoe import Document
+            >>> from mistletoe_notey import Document
             >>> from some_renderer import SomeRenderer
             >>> with SomeRenderer() as renderer:
             ...     rendered = renderer.render(Document(fin))
 
-        See mistletoe.html_renderer for an implementation example.
+        See mistletoe_notey.html_renderer for an implementation example.
 
     Naming conventions:
         *   The keys of self.render_map should exactly match the class

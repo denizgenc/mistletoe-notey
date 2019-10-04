@@ -1,9 +1,9 @@
 import sys
-import mistletoe
+import mistletoe_notey
 from argparse import ArgumentParser
 
 
-version_str = 'mistletoe [version {}]'.format(mistletoe.__version__)
+version_str = 'mistletoe_notey [version {}]'.format(mistletoe_notey.__version__)
 
 
 def main(args):
@@ -25,7 +25,7 @@ def convert_file(filename, renderer):
     """
     try:
         with open(filename, 'r') as fin:
-            rendered = mistletoe.markdown(fin, renderer)
+            rendered = mistletoe_notey.markdown(fin, renderer)
             print(rendered, end='')
     except OSError:
         sys.exit('Cannot open file "{}".'.format(filename))
@@ -45,7 +45,7 @@ def interactive(renderer):
             prompt, more = ('... ', True) if more else ('>>> ', True)
             contents.append(input(prompt) + '\n')
         except EOFError:
-            print('\n' + mistletoe.markdown(contents, renderer), end='')
+            print('\n' + mistletoe_notey.markdown(contents, renderer), end='')
             more = False
             contents = []
         except KeyboardInterrupt:
@@ -56,7 +56,7 @@ def interactive(renderer):
 def parse(args):
     parser = ArgumentParser()
     parser.add_argument('-r', '--renderer', type=_import,
-                        default='mistletoe.HTMLRenderer',
+                        default='mistletoe_notey.HTMLRenderer',
                         help='specify an importable renderer class')
     parser.add_argument('-v', '--version', action='version', version=version_str)
     parser.add_argument('filenames', nargs='*',
@@ -88,6 +88,6 @@ def _import_readline():
 def _print_heading(renderer):
     print('{} (interactive)'.format(version_str))
     print('Type Ctrl-D to complete input, or Ctrl-C to exit.')
-    if renderer is not mistletoe.HTMLRenderer:
+    if renderer is not mistletoe_notey.HTMLRenderer:
         print('Using renderer: {}'.format(renderer.__name__))
 

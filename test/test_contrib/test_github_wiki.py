@@ -1,6 +1,6 @@
 from unittest import TestCase, mock
-from mistletoe import span_token, Document
-from mistletoe.span_token import tokenize_inner, _token_types
+from mistletoe_notey import span_token, Document
+from mistletoe_notey.span_token import tokenize_inner, _token_types
 from contrib.github_wiki import GithubWiki, GithubWikiRenderer
 
 
@@ -12,7 +12,7 @@ class TestGithubWiki(TestCase):
         self.addCleanup(self.renderer.__exit__, None, None, None)
 
     def test_parse(self):
-        MockRawText = mock.Mock(autospec='mistletoe.span_token.RawText')
+        MockRawText = mock.Mock(autospec='mistletoe_notey.span_token.RawText')
         RawText = _token_types.pop()
         _token_types.append(MockRawText)
         try:

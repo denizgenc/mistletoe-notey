@@ -1,17 +1,17 @@
 from unittest import TestCase
 from unittest.mock import call, patch, sentinel, mock_open, Mock
-from mistletoe import cli
+from mistletoe_notey import cli
 
 
 class TestCLI(TestCase):
-    @patch('mistletoe.cli.parse', return_value=Mock(filenames=[], renderer=sentinel.Renderer))
-    @patch('mistletoe.cli.interactive')
+    @patch('mistletoe_notey.cli.parse', return_value=Mock(filenames=[], renderer=sentinel.Renderer))
+    @patch('mistletoe_notey.cli.interactive')
     def test_main_to_interactive(self, mock_interactive, mock_parse):
         cli.main(None)
         mock_interactive.assert_called_with(sentinel.Renderer)
 
-    @patch('mistletoe.cli.parse', return_value=Mock(filenames=['foo.md'], renderer=sentinel.Renderer))
-    @patch('mistletoe.cli.convert')
+    @patch('mistletoe_notey.cli.parse', return_value=Mock(filenames=['foo.md'], renderer=sentinel.Renderer))
+    @patch('mistletoe_notey.cli.convert')
     def test_main_to_convert(self, mock_convert, mock_parse):
         cli.main(None)
         mock_convert.assert_called_with(['foo.md'], sentinel.Renderer)
@@ -28,14 +28,14 @@ class TestCLI(TestCase):
         namespace = cli.parse(filenames)
         self.assertEqual(namespace.filenames, filenames)
 
-    @patch('mistletoe.cli.convert_file')
+    @patch('mistletoe_notey.cli.convert_file')
     def test_convert(self, mock_convert_file):
         filenames = ['foo', 'bar']
         cli.convert(filenames, sentinel.RendererCls)
         calls = [call(filename, sentinel.RendererCls) for filename in filenames]
         mock_convert_file.assert_has_calls(calls)
 
-    @patch('mistletoe.markdown', return_value='rendered text')
+    @patch('mistletoe_notey.markdown', return_value='rendered text')
     @patch('builtins.print')
     @patch('builtins.open', new_callable=mock_open)
     def test_convert_file_success(self, mock_open_, mock_print, mock_markdown):
@@ -52,9 +52,9 @@ class TestCLI(TestCase):
         mock_open_.assert_called_with(filename, 'r')
         mock_exit.assert_called_with('Cannot open file "foo".')
 
-    @patch('mistletoe.cli._import_readline')
-    @patch('mistletoe.cli._print_heading')
-    @patch('mistletoe.markdown', return_value='rendered text')
+    @patch('mistletoe_notey.cli._import_readline')
+    @patch('mistletoe_notey.cli._print_heading')
+    @patch('mistletoe_notey.markdown', return_value='rendered text')
     @patch('builtins.print')
     def test_interactive(self, mock_print, mock_markdown,
                          mock_print_heading, mock_import_readline):
@@ -120,8 +120,8 @@ class TestCLI(TestCase):
     @patch('builtins.print')
     def test_print_heading(self, mock_print):
         cli._print_heading(Mock(__name__='Renderer'))
-        version = cli.mistletoe.__version__
-        msgs = ['mistletoe [version {}] (interactive)'.format(version),
+        version = cli.mistletoe_notey.__version__
+        msgs = ['mistletoe_notey [version {}] (interactive)'.format(version),
                 'Type Ctrl-D to complete input, or Ctrl-C to exit.', 
                 'Using renderer: Renderer']
         calls = [call(msg) for msg in msgs]

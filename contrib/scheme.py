@@ -1,7 +1,7 @@
 import re
 from collections import ChainMap
-from mistletoe import BaseRenderer, span_token, block_token
-from mistletoe.core_tokens import MatchObj
+from mistletoe_notey import BaseRenderer, span_token, block_token
+from mistletoe_notey.core_tokens import MatchObj
 
 
 class Program(block_token.BlockToken):

@@ -27,7 +27,7 @@ import sys
 import getopt
 import subprocess
 import shutil
-import mistletoe
+import mistletoe_notey
 from contrib.jira_renderer import JIRARenderer
 
 usageString = '%s <markdownfile>' % os.path.basename(sys.argv[0])
@@ -91,7 +91,7 @@ class MarkdownToJIRA:
             sys.exit(1)
 
         with open(args[0], 'r') if len(args) == 1 else sys.stdin as infile:
-            rendered = mistletoe.markdown(infile, JIRARenderer)
+            rendered = mistletoe_notey.markdown(infile, JIRARenderer)
 
         if self.options['output'] == '-':
             sys.stdout.write(rendered)

@@ -1,9 +1,9 @@
 """
-Make mistletoe runnable as a script with default settings.
+Make mistletoe_notey runnable as a script with default settings.
 """
 
 import sys
-from mistletoe import cli
+from mistletoe_notey import cli
 
 
 def main():
