@@ -66,12 +66,6 @@ class TestLaTeXRenderer(TestCase):
         output = '\ninner\n'
         self._test_token('Paragraph', output)
 
-    def test_block_code(self):
-        func_path = 'mistletoe.latex_renderer.LaTeXRenderer.render_raw_text'
-        with mock.patch(func_path, return_value='inner'):
-            output = '\n\\begin{lstlisting}[language=sh]\ninner\\end{lstlisting}\n'
-            self._test_token('BlockCode', output, language='sh')
-
     def test_list(self):
         output = '\\begin{itemize}\ninner\\end{itemize}\n'
         self._test_token('List', output, start=None)

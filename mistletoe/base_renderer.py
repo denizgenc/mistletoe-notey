@@ -59,7 +59,6 @@ class BaseRenderer(object):
             'Quote':          self.render_quote,
             'Paragraph':      self.render_paragraph,
             'CodeFence':      self.render_block_code,
-            'BlockCode':      self.render_block_code,
             'List':           self.render_list,
             'ListItem':       self.render_list_item,
             'Table':          self.render_table,

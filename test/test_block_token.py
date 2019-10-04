@@ -107,13 +107,6 @@ class TestCodeFence(TestToken):
         self._test_match(block_token.CodeFence, lines, arg, language='')
 
 
-class TestBlockCode(TestToken):
-    def test_parse_indented_code(self):
-        lines = ['    rm dir\n', '    mkdir test\n']
-        arg = 'rm dir\nmkdir test\n'
-        self._test_match(block_token.BlockCode, lines, arg, language='')
-
-
 class TestParagraph(TestToken):
     def test_parse(self):
         lines = ['some\n', 'continuous\n', 'lines\n']
@@ -156,7 +149,6 @@ class TestListItem(unittest.TestCase):
         token1, token2 = next(iter(block_token.tokenize(lines))).children[0].children
         self.assertIsInstance(token1, block_token.Paragraph)
         self.assertTrue('foo' in token1)
-        self.assertIsInstance(token2, block_token.BlockCode)
 
     def test_sublist(self):
         lines = ['- foo\n',

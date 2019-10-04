@@ -20,7 +20,7 @@ from mistletoe.core_tokens import (
 """
 Tokens to be included in the parsing process, in the order specified.
 """
-__all__ = ['BlockCode', 'Heading', 'Quote', 'CodeFence', 'ThematicBreak',
+__all__ = ['Heading', 'Quote', 'CodeFence', 'ThematicBreak',
            'List', 'Table', 'Footnote', 'Paragraph']
 
 
@@ -229,7 +229,6 @@ class Quote(BlockToken):
 
         # set booleans
         in_code_fence = CodeFence.start(line)
-        in_block_code = BlockCode.start(line)
         blank_line = line.strip() == ''
 
         # loop
@@ -249,7 +248,6 @@ class Quote(BlockToken):
                     prepend += 1
                 stripped = stripped[prepend:]
                 in_code_fence = CodeFence.start(stripped)
-                in_block_code = BlockCode.start(stripped)
                 blank_line = stripped.strip() == ''
                 line_buffer.append(stripped)
             elif in_code_fence or in_block_code or blank_line:
@@ -349,51 +347,6 @@ class Paragraph(BlockToken):
     @classmethod
     def is_setext_heading(cls, line):
         return cls.setext_pattern.match(line)
-
-
-class BlockCode(BlockToken):
-    """
-    Indented code.
-
-    Attributes:
-        children (list): contains a single span_token.RawText token.
-        language (str): always the empty string.
-    """
-    def __init__(self, lines):
-        self.language = ''
-        self.children = (span_token.RawText(''.join(lines).strip('\n')+'\n'),)
-
-    @staticmethod
-    def start(line):
-        return line.replace('\t', '    ', 1).startswith('    ')
-
-    @classmethod
-    def read(cls, lines):
-        line_buffer = []
-        for line in lines:
-            if line.strip() == '':
-                line_buffer.append(line.lstrip(' ') if len(line) < 5 else line[4:])
-                continue
-            if not line.replace('\t', '    ', 1).startswith('    '):
-                lines.backstep()
-                break
-            line_buffer.append(cls.strip(line))
-        return line_buffer
-
-    @staticmethod
-    def strip(string):
-        count = 0
-        for i, c in enumerate(string):
-            if c == '\t':
-                return string[i+1:]
-            elif c == ' ':
-                count += 1
-            else:
-                break
-            if count == 4:
-                return string[i+1:]
-        return string
-
 
 class CodeFence(BlockToken):
     """
