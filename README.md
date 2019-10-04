@@ -1,461 +1,78 @@
-<h1>mistletoe_notey<img src='https://cdn.rawgit.com/miyuchina/mistletoe_notey/master/resources/logo.svg' align='right' width='128' height='128'></h1>
+mistletoe-notey
+===============
 
-[![Build Status][build-badge]][travis]
-[![Coverage Status][cover-badge]][coveralls]
-[![PyPI][pypi-badge]][pypi]
-[![is wheel][wheel-badge]][pypi]
+This is based on Mi Yu's mistletoe, which is an extensible, CommonMark compliant Markdown parser in
+pure Python. See it here: https://github.com/miyuchina/mistletoe
 
-mistletoe_notey is a Markdown parser in pure Python,
-designed to be fast, spec-compliant and fully customizable.
+misteltoe-notey, however, does not comply with CommonMark. It parses my own form of Markdown that's
+more in line with how I take plaintext notes. I don't have a specification or a real name for it
+(I'm thinking of calling it Notey Markdown, hence the name of this repo), so this is pretty much the
+only place you can find out about it (and, I guess, the reference implementation).
 
-Apart from being the fastest
-CommonMark-compliant Markdown parser implementation in pure Python,
-mistletoe_notey also supports easy definitions of custom tokens.
-Parsing Markdown into an abstract syntax tree
-also allows us to swap out renderers for different output formats,
-without touching any of the core components.
+Differences from CommonMark
+---------------------------
+The following two changes go hand in hand:
 
-Remember to spell mistletoe_notey in lowercase!
+- Complete removal of indented code blocks: https://spec.commonmark.org/0.29/#indented-code-blocks
+- Allowing an initial list item to be indented with 4 spaces (which causes no issue since indented
+  code blocks don't exist any longer)
+    - I could potentially make this change for HTML blocks and block quotes, but I don't use those.
 
-Features
---------
-* **Fast**:
-  mistletoe_notey is the fastest implementation of CommonMark in Python,
-  that is, 2 to 3 times as fast as [Commonmark-py][commonmark-py],
-  and still roughly 30% faster than [Python-Markdown][python-markdown].
-  Running with PyPy yields comparable performance with [mistune][mistune].
-  
-  See the [performance](#performance) section for details.
+For some reason, mistletoe by default seems to enable Github Flavored Markdown (GFM) extensions
+(the one I've noticed is strikethrough), so you can add those to the pile too.
 
-* **Spec-compliant**:
-  CommonMark is [a useful, high-quality project][oilshell].
-  mistletoe_notey follows the [CommonMark specification][commonmark]
-  to resolve ambiguities during parsing.
-  Outputs are predictable and well-defined.
+Motivation
+----------
+tl;dr: read this Twitter thread: https://twitter.com/denizgenc_623/status/1179775450878492676
 
-* **Extensible**:
-  Strikethrough and tables are supported natively,
-  and custom block-level and span-level tokens can easily be added.
-  Writing a new renderer for mistletoe_notey is a relatively
-  trivial task.
-  
-  You can even write [a Lisp][scheme] in it.
-  
-Some alternative output formats:
-
-* HTML
-* LaTeX
-* Jira Markdown ([contrib][contrib])
-* Mathjax ([contrib][contrib])
-* Scheme ([contrib][contrib])
-* HTML + code highlighting ([contrib][contrib])
-
-Installation
-------------
-mistletoe_notey is tested for Python 3.3 and above. Install mistletoe_notey with pip:
-
-```sh
-pip3 install mistletoe_notey
+When I take notes, they look like this:
+```
+I have a point that is made
+    - And then I might start writing related points as a list with a 4 space indent
+    - I do this to more clearly distinguish these lists as "children" of the initial point
+    - And the 4 space indent is because I'm a Python programmer with a softtabstop of 4
 ```
 
-Alternatively, clone the repo:
+However, when I do this with CommonMark compliant Markdown implementations (which includes GFM),
+as an indented code block (i.e. a line starting with 4 spaces) cannot interrupt a paragraph (see
+https://spec.commonmark.org/0.29/#example-83), it collapses the list items into the "parent" line.
 
-```sh
-git clone https://github.com/miyuchina/mistletoe_notey.git
-cd mistletoe_notey
-pip3 install -e .
+This makes
 ```
-
-See the [contributing][contributing] doc for how to contribute to mistletoe_notey.
-
-Usage
------
-
-### Basic usage
-
-Here's how you can use mistletoe_notey in a Python script:
-
-```python
-import mistletoe_notey
-
-with open('foo.md', 'r') as fin:
-    rendered = mistletoe_notey.markdown(fin)
+These
+    - sorts
+    - of
+    - lists
 ```
+render as:
 
-`mistletoe_notey.markdown()` uses mistletoe_notey's default settings: allowing HTML mixins
-and rendering to HTML. The function also accepts an additional argument
-`renderer`. To produce LaTeX output:
+These
+    - sorts
+    - of
+    - lists
 
-```python
-import mistletoe_notey
-from mistletoe_notey.latex_renderer import LaTeXRenderer
+(see the source for the above "line" if you don't believe me).
 
-with open('foo.md', 'r') as fin:
-    rendered = mistletoe_notey.markdown(fin, LaTeXRenderer)
+This has potential solutions, the simplest of which is to use an indent with 2 spaces (or 3 spaces,
+if you're feeling spicy) when making lists.
 ```
-
-Finally, here's how you would manually specify extra tokens and a renderer
-for mistletoe_notey. In the following example, we use `HTMLRenderer` to render
-the AST, which adds `HTMLBlock` and `HTMLSpan` to the normal parsing
-process.
-
-```python
-from mistletoe_notey import Document, HTMLRenderer
-
-with open('foo.md', 'r') as fin:
-    with HTMLRenderer() as renderer:
-        rendered = renderer.render(Document(fin))
+This
+  - Works as
+  - you might expect
 ```
-
-### From the command-line
-
-pip installation enables mistletoe_notey's command-line utility. Type the following
-directly into your shell:
-
-```sh
-mistletoe_notey foo.md
-```
-
-This will transpile `foo.md` into HTML, and dump the output to stdout. To save
-the HTML, direct the output into a file:
-
-```sh
-mistletoe_notey foo.md > out.html
-```
-
-You can pass in custom renderers by including the full path to your renderer
-class after a `-r` or `--renderer` flag:
-
-```sh
-mistletoe_notey foo.md --renderer custom_renderer.CustomRenderer
-```
-
-Running `mistletoe_notey` without specifying a file will land you in interactive
-mode.  Like Python's REPL, interactive mode allows you to test how your
-Markdown will be interpreted by mistletoe_notey:
-
-```html
-mistletoe_notey [version 0.7.2] (interactive)
-Type Ctrl-D to complete input, or Ctrl-C to exit.
->>> some **bold** text
-... and some *italics*
-...
-<p>some <strong>bold</strong> text
-and some <em>italics</em></p>
->>>
-```
-
-The interactive mode also accepts the `--renderer` flag:
-
-```latex
-mistletoe_notey [version 0.7.2] (interactive)
-Type Ctrl-D to complete input, or Ctrl-C to exit.
-Using renderer: LaTeXRenderer
->>> some **bold** text
-... and some *italics*
-...
-\documentclass{article}
-\begin{document}
-
-some \textbf{bold} text
-and some \textit{italics}
-\end{document}
->>>
-```
-
-Performance
------------
-
-mistletoe_notey is the fastest CommonMark compliant implementation in Python.
-Try the benchmarks yourself by running:
-
-```sh
-$ python3 test/benchmark.py  # all results in seconds
-Test document: test/samples/syntax.md
-Test iterations: 1000
-Running tests with markdown, mistune, commonmark, mistletoe_notey...
-==============================================================
-markdown: 33.28557115700096
-mistune: 8.533771439999327
-commonmark: 84.54588776299897
-mistletoe_notey: 23.5405140980001
-```
-
-We notice that Mistune is the fastest Markdown parser,
-and by a good margin, which demands some explanation.
-mistletoe_notey's biggest performance penalty
-comes from stringently following the CommonMark spec,
-which outlines a highly context-sensitive grammar for Markdown.
-Mistune takes a simpler approach to the lexing and parsing process,
-but this means that it cannot handle more complex cases,
-e.g., precedence of different types of tokens, escaping rules, etc.
-
-To see why this might be important to you,
-consider the following Markdown input
-([example 392][example-392] from the CommonMark spec):
-
-```markdown
-***foo** bar*
-```
-
-The natural interpretation is:
-
-```html
-<p><em><strong>foo</strong> bar</em></p>
-```
-
-... and it is indeed the output of Python-Markdown, Commonmark-py and mistletoe_notey.
-Mistune (version 0.8.3) greedily parses the first two asterisks
-in the first delimiter run as a strong-emphasis opener,
-the second delimiter run as its closer,
-but does not know what to do with the remaining asterisk in between:
-
-```html
-<p><strong>*foo</strong> bar*</p>
-```
-
-The implication of this runs deeper,
-and it is not simply a matter of dogmatically following an external spec.
-By adopting a more flexible parsing algorithm,
-mistletoe_notey allows us to specify a precedence level to each token class,
-including custom ones that you might write in the future.
-Code spans, for example, has a higher precedence level than emphasis,
-so
-
-```markdown
-*foo `bar* baz`
-```
-
-... is parsed as:
-
-```html
-<p>*foo <code>bar* baz</code></p>
-```
-
-... whereas Mistune parses this as:
-
-```html
-<p><em>foo `bar</em> baz`</p>
-```
-
-Of course, it is not *impossible* for Mistune to modify its behavior,
-and parse these two examples correctly,
-through more sophisticated regexes or some other means.
-It is nevertheless *highly likely* that,
-when Mistune implements all the necessary context checks,
-it will suffer from the same performance penalties.
-
-Contextual analysis is why Python-Markdown is slow, and why CommonMark-py is slower.
-The lack thereof is the reason mistune enjoys stellar performance
-among similar parser implementations,
-as well as the limitations that come with these performance benefits.
-
-If you want an implementation that focuses on raw speed,
-mistune remains a solid choice.
-If you need a spec-compliant and readily extensible implementation, however,
-mistletoe_notey is still marginally faster than Python-Markdown,
-while supporting more functionality (lists in block quotes, for example),
-and significantly faster than CommonMark-py.
-
-
-One last note: another bottleneck of mistletoe_notey compared to mistune
-is the function overhead. Because, unlike mistune, mistletoe_notey chooses to split
-functionality into modules, function lookups can take significantly longer than
-mistune. To boost the performance further, it is suggested to use PyPy with mistletoe_notey.
-Benchmark results show that on PyPy, mistletoe_notey's performance is on par with mistune:
-
-```sh
-$ pypy3 test/benchmark.py mistune mistletoe_notey
-Test document: test/samples/syntax.md
-Test iterations: 1000
-Running tests with mistune, mistletoe_notey...
-========================================
-mistune: 13.645681533998868
-mistletoe_notey: 15.088351159000013
-```
-
-Developer's Guide
------------------
-Here's an example to add GitHub-style wiki links to the parsing process,
-and provide a renderer for this new token.
-
-### A new token
-
-GitHub wiki links are span-level tokens, meaning that they reside inline,
-and don't really look like chunky paragraphs. To write a new span-level
-token, all we need to do is make a subclass of `SpanToken`:
-
-```python
-from mistletoe_notey.span_token import SpanToken
-
-class GithubWiki(SpanToken):
-    pass
-```
-
-mistletoe_notey uses regular expressions to search for span-level tokens in the
-parsing process. As a refresher, GitHub wiki looks something like this:
-`[[alternative text | target]]`. We define a class variable, `pattern`,
-that stores the compiled regex:
-
-```python
-class GithubWiki(SpanToken):
-    pattern = re.compile(r"\[\[ *(.+?) *\| *(.+?) *\]\]")
-    def __init__(self, match):
-        pass
-```
-
-The regex will be picked up by `SpanToken.find`, which is used by the
-tokenizer to find all tokens of its kind in the document.
-If regexes are too limited for your use case, consider overriding
-the `find` method; it should return a list of all token occurrences.
-
-Three other class variables are available for our custom token class,
-and their default values are shown below:
-
-```python
-class SpanToken:
-    parse_group = 1
-    parse_inner = True
-    precedence = 5
-```
-
-Note that alternative text can also contain other span-level tokens. For
-example, `[[*alt*|link]]` is a GitHub link with an `Emphasis` token as its
-child. To parse child tokens, `parse_inner` should be set to `True`
-(the default value in this case), and `parse_group` should correspond
-to the match group in which child tokens might occur
-(also the default value, 1, in this case).
-
-Once these two class variables are set correctly,
-`GitHubWiki.children` attribute will automatically be set to
-the list of child tokens.
-Note that there is no need to manually set this attribute,
-unlike previous versions of mistletoe_notey.
-
-Lastly, the `SpanToken` constructors take a regex match object as its argument.
-We can simply store off the `target` attribute from `match_obj.group(2)`.
-
-```python
-from mistletoe_notey.span_token import SpanToken
-
-class GithubWiki(SpanToken):
-    pattern = re.compile(r"\[\[ *(.+?) *\| *(.+?) *\]\]")
-    def __init__(self, match_obj):
-        self.target = match_obj.group(2)
-```
-
-There you go: a new token in 5 lines of code.
-
-### Side note about precedence
-
-Normally there is no need to override the `precedence` value of a custom token.
-The default value is the same as `InlineCode`, `AutoLink` and `HTMLSpan`,
-which means that whichever token comes first will be parsed. In our case:
-
-```markdown
-`code with [[ text` | link ]]
-```
-
-... will be parsed as:
-
-```html
-<code>code with [[ text</code> | link ]]
-```
-
-If we set `GitHubWiki.precedence = 6`, we have:
-
-```html
-`code with <a href="link">text`</a>
-```
-
-### A new renderer
-
-Adding a custom token to the parsing process usually involves a lot
-of nasty implementation details. Fortunately, mistletoe_notey takes care
-of most of them for you. Simply pass your custom token class to 
-`super().__init__()` does the trick:
-
-```python
-from mistletoe_notey.html_renderer import HTMLRenderer
-
-class GithubWikiRenderer(HTMLRenderer):
-    def __init__(self):
-        super().__init__(GithubWiki)
-```
-
-We then only need to tell mistletoe_notey how to render our new token:
-
-```python
-def render_github_wiki(self, token):
-    template = '<a href="{target}">{inner}</a>'
-    target = token.target
-    inner = self.render_inner(token)
-    return template.format(target=target, inner=inner)
-```
-Cleaning up, we have our new renderer class:
-
-```python
-from mistletoe_notey.html_renderer import HTMLRenderer, escape_url
-
-class GithubWikiRenderer(HTMLRenderer):
-    def __init__(self):
-        super().__init__(GithubWiki)
-
-    def render_github_wiki(self, token):
-        template = '<a href="{target}">{inner}</a>'
-        target = escape_url(token.target)
-        inner = self.render_inner(token)
-        return template.format(target=target, inner=inner)
-```
-
-### Take it for a spin?
-
-It is preferred that all mistletoe_notey's renderers be used as context managers.
-This is to ensure that your custom tokens are cleaned up properly, so that
-you can parse other Markdown documents with different token types in the
-same program.
-
-```python
-from mistletoe_notey import Document
-from contrib.github_wiki import GithubWikiRenderer
-
-with open('foo.md', 'r') as fin:
-    with GithubWikiRenderer() as renderer:
-        rendered = renderer.render(Document(fin))
-```
-
-For more info, take a look at the `base_renderer` module in mistletoe_notey.
-The docstrings might give you a more granular idea of customizing mistletoe_notey
-to your needs.
-
-Why mistletoe_notey?
---------------
-
-"For fun," says David Beazley.
-
-Copyright & License
--------------------
-* mistletoe_notey's logo uses artwork by [Freepik][icon], under
-  [CC BY 3.0][cc-by].
-* mistletoe_notey is released under [MIT][license].
-
-[build-badge]: https://img.shields.io/travis/miyuchina/mistletoe_notey.svg?style=flat-square
-[cover-badge]: https://img.shields.io/coveralls/miyuchina/mistletoe_notey.svg?style=flat-square
-[pypi-badge]: https://img.shields.io/pypi/v/mistletoe_notey.svg?style=flat-square
-[wheel-badge]: https://img.shields.io/pypi/wheel/mistletoe_notey.svg?style=flat-square
-[travis]: https://travis-ci.org/miyuchina/mistletoe_notey
-[coveralls]: https://coveralls.io/github/miyuchina/mistletoe_notey?branch=master
-[pypi]: https://pypi.python.org/pypi/mistletoe_notey
-[mistune]: https://github.com/lepture/mistune
-[python-markdown]: https://github.com/waylan/Python-Markdown
-[python-markdown2]: https://github.com/trentm/python-markdown2
-[commonmark-py]: https://github.com/rtfd/CommonMark-py
-[oilshell]: https://www.oilshell.org/blog/2018/02/14.html
-[commonmark]: https://spec.commonmark.org/
-[contrib]: https://github.com/miyuchina/mistletoe_notey/tree/master/contrib
-[scheme]: https://github.com/miyuchina/mistletoe_notey/blob/dev/contrib/scheme.py
-[contributing]: CONTRIBUTING.md
-[example-392]: https://spec.commonmark.org/0.28/#example-392
-[icon]: https://www.freepik.com
-[cc-by]: https://creativecommons.org/licenses/by/3.0/us/
-[license]: LICENSE
+renders:
+
+This
+  - Works as
+  - you might expect
+
+But I don't want to change my softtabstop for plaintext or Markdown files. So because, for some
+reason, I felt kind of stubborn about this, I decided to create my own "spec". /shrugs
+
+**Q:** Where are you going to use this? If you want your Markdown notes rendering somewhere, it 
+       most definitely is going to use something close to CommonMark, so you won't be able to use
+       this and you'll end up having to reformat your notes regardless.  
+**A:** Yes, this is kind of pointless (unless I make my own website and with a templating engine
+       based on Markdown, and then I have an excuse to swap out the parser in that with this one).
+       However, now that I've done this, I'm more motivated to make a "transpiler" (for plaintext,
+       lmao) that converts my not-quite-Markdown to proper Markdown. Everything is possible.
