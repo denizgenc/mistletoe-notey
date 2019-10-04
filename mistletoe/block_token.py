@@ -316,8 +316,10 @@ class Paragraph(BlockToken):
 
             # check if next_line starts List
             list_pair = ListItem.parse_marker(next_line)
-            if (len(next_line) - len(next_line.lstrip()) < 4
-                    and list_pair is not None):
+            # Fuck you:
+            # if (len(next_line) - len(next_line.lstrip()) < 4
+            #         and list_pair is not None):
+            if list_pair is not None:
                 prepend, leader = list_pair
                 # non-empty list item
                 if next_line[:prepend].endswith(' '):
@@ -401,7 +403,7 @@ class List(BlockToken):
         loose (bool): whether the list is loose.
         start (NoneType or int): None if unordered, starting number if ordered.
     """
-    pattern = re.compile(r' {0,3}(?:\d{0,9}[.)]|[+\-*])(?:[ \t]*$|[ \t]+)')
+    pattern = re.compile(r' {0,4}(?:\d{0,9}[.)]|[+\-*])(?:[ \t]*$|[ \t]+)') # I like 4 spaces, idiot
     def __init__(self, matches):
         self.children = [ListItem(*match) for match in matches]
         self.loose = any(item.loose for item in self.children)
