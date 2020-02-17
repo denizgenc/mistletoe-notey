@@ -1,6 +1,13 @@
+After I did all of this I realised it would just be easier to learn to take notes in a CommonMark-
+compliant fashion, and just accept it. It's rather stupid to fork a whole markdown parser just
+because you want initial bullet points to have 4 spaces in front of them.
+
+This means, of course, that this repository is not being maintained.
+
+Anyway, here's a monument to some bizarre hubris:
+
 mistletoe-notey
 ===============
-
 This is based on Mi Yu's mistletoe, which is an extensible, CommonMark compliant Markdown parser in
 pure Python. See it here: https://github.com/miyuchina/mistletoe
 
